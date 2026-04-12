@@ -1,0 +1,231 @@
+{
+  "name": "comment-translator",
+  "displayName": "Comment Translator",
+  "description": "Translate comments, logs, prints, and error messages in your codebase to any language",
+  "version": "1.0.0",
+  "publisher": "ymka",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "commentTranslator.openSettings",
+        "title": "Translator: Settings",
+        "icon": "$(settings-gear)",
+        "shortTitle": "Settings"
+      },
+      {
+        "command": "commentTranslator.translateCurrentFile",
+        "title": "Translate This File",
+        "icon": "$(globe)",
+        "shortTitle": "Translate"
+      },
+      {
+        "command": "commentTranslator.translate",
+        "title": "Comment Translator: Translate Project",
+        "icon": "$(run-all)"
+      },
+      {
+        "command": "commentTranslator.applyTranslation",
+        "title": "Apply Translation",
+        "icon": "$(check)",
+        "shortTitle": "Apply"
+      },
+      {
+        "command": "commentTranslator.revertTranslation",
+        "title": "Revert Translation",
+        "icon": "$(close)",
+        "shortTitle": "Revert"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "commentTranslator.applyTranslation",
+          "group": "navigation@0",
+          "when": "resourceScheme == comment-translator-preview"
+        },
+        {
+          "command": "commentTranslator.revertTranslation",
+          "group": "navigation@1",
+          "when": "resourceScheme == comment-translator-preview"
+        },
+        {
+          "command": "commentTranslator.translateCurrentFile",
+          "group": "navigation@2",
+          "when": "editorLangId && resourceScheme != comment-translator-preview"
+        },
+        {
+          "command": "commentTranslator.openSettings",
+          "group": "navigation@3",
+          "when": "editorLangId && resourceScheme != comment-translator-preview"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "commentTranslator.translateCurrentFile",
+          "group": "9_cutcopypaste"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "commentTranslator.openSettings"
+        },
+        {
+          "command": "commentTranslator.translateCurrentFile"
+        },
+        {
+          "command": "commentTranslator.translate"
+        },
+        {
+          "command": "commentTranslator.applyTranslation",
+          "when": "false"
+        },
+        {
+          "command": "commentTranslator.revertTranslation",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Comment Translator",
+      "properties": {
+        "commentTranslator.deeplApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "DeepL API Key (Free tier)",
+          "order": 1
+        },
+        "commentTranslator.targetLanguage": {
+          "type": "string",
+          "default": "EN-US",
+          "enum": [
+            "EN-US",
+            "EN-GB",
+            "DE",
+            "FR",
+            "ES",
+            "IT",
+            "PT-PT",
+            "PT-BR",
+            "RU",
+            "JA",
+            "ZH"
+          ],
+          "description": "Target language for translation",
+          "order": 2
+        },
+        "commentTranslator.translateComments": {
+          "type": "boolean",
+          "default": true,
+          "description": "Translate comments",
+          "order": 3
+        },
+        "commentTranslator.translateLogs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Translate log statements",
+          "order": 4
+        },
+        "commentTranslator.translatePrints": {
+          "type": "boolean",
+          "default": true,
+          "description": "Translate print statements",
+          "order": 5
+        },
+        "commentTranslator.translateErrors": {
+          "type": "boolean",
+          "default": true,
+          "description": "Translate error messages",
+          "order": 6
+        },
+        "commentTranslator.translateStrings": {
+          "type": "boolean",
+          "default": false,
+          "description": "Translate all string literals",
+          "order": 7
+        },
+        "commentTranslator.translatePlainText": {
+          "type": "boolean",
+          "default": true,
+          "description": "Translate plain text in text files (.txt, .md, files without extension)",
+          "order": 8
+        },
+        "commentTranslator.mode": {
+          "type": "string",
+          "default": "preview",
+          "enum": [
+            "preview",
+            "replace"
+          ],
+          "enumDescriptions": [
+            "Show preview of changes before applying",
+            "Replace content directly in files"
+          ],
+          "description": "Translation mode",
+          "order": 9
+        },
+        "commentTranslator.scope": {
+          "type": "string",
+          "default": "currentFile",
+          "enum": [
+            "currentFile",
+            "wholeProject"
+          ],
+          "enumDescriptions": [
+            "Translate current file only",
+            "Translate entire project"
+          ],
+          "description": "Translation scope",
+          "order": 10
+        },
+        "commentTranslator.excludePatterns": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/.git/**",
+            "**/dist/**",
+            "**/out/**",
+            "**/build/**",
+            "**/*.min.js"
+          ],
+          "description": "File patterns to exclude from translation",
+          "order": 11
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "deepl-node": "^1.12.0",
+    "axios": "^1.6.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/i-ymka/comment-translator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/i-ymka/comment-translator/issues"
+  },
+  "homepage": "https://github.com/i-ymka/comment-translator#readme"
+}
