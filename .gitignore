@@ -4,3 +4,12 @@ out
 .vscode-test
 .DS_Store
 CLAUDE.md
+
+# Claude & design files
+.claude/
+*.pen
+
+# Temp screenshots
+*.jpeg
+*.jpg
+!assets/
